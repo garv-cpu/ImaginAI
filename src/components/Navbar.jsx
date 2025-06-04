@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 const Navbar = () => {
-  const { user, setShowLogin } = useContext(AppContext);
+  const { user, setShowLogin, logout, credit } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -26,10 +26,10 @@ const Navbar = () => {
             >
               <img className="w-5" src={assets.credit_star} alt="credit" />
               <p className="text-xs sm:text-sm font-medium text-gray-600">
-                Credits left : 50
+                Credits left : {credit}
               </p>
             </button>
-            <p className="text-white max-sm:hidden pl-4">Hi, Garv</p>
+            <p className="text-white max-sm:hidden pl-4">Hi, {user.name}</p>
             <div className="relative group">
               <img
                 src={assets.profile_icon}
@@ -38,7 +38,7 @@ const Navbar = () => {
               />
               <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-white rounded pt-12">
                 <ul className="list-none m-0 p-2 bg-white rounded-md border text-sm">
-                  <li className="text-black py-1 px-2 cursor-pointer pr-10">
+                  <li onClick={logout} className="text-black py-1 px-2 cursor-pointer pr-10">
                     Logout
                   </li>
                 </ul>

@@ -1,10 +1,21 @@
 import React, { useContext } from "react";
 import { plans } from "../assets/assets";
 import { AppContext } from "./../context/AppContext";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // corrected import
+import { Sparkles, AlarmClock } from "lucide-react";
 
 const BuyCredit = () => {
   const { user } = useContext(AppContext);
+
+  // Launch logic (4-day deal)
+  const launchStartDate = new Date("2025-06-04");
+  const now = new Date();
+  const diffTime = Math.max(
+    0,
+    4 - Math.floor((now - launchStartDate) / (1000 * 60 * 60 * 24))
+  );
+
+  const isLaunchActive = diffTime > 0;
 
   return (
     <motion.div
@@ -17,9 +28,20 @@ const BuyCredit = () => {
       <button className="border border-gray-500 px-10 py-2 rounded-full mb-6 text-white">
         Our Plans
       </button>
-      <h1 className="text-center text-3xl font-medium mb-6 sm:mb-10 text-gray-400">
+
+      <h1 className="text-center text-3xl font-medium mb-2 text-gray-400">
         Choose the plan
       </h1>
+
+      {isLaunchActive && (
+        <p className="text-sm text-yellow-400 mb-6 flex items-center justify-center gap-2">
+          <AlarmClock size={16} /> Launch Offer ends in{" "}
+          <span className="font-semibold">
+            {diffTime} day{diffTime > 1 ? "s" : ""}
+          </span>
+          !
+        </p>
+      )}
 
       <div className="flex flex-wrap justify-center gap-6 text-left">
         {plans.map((item, index) => (
@@ -43,6 +65,11 @@ const BuyCredit = () => {
             </button>
           </div>
         ))}
+      </div>
+
+      <div className="mt-12 text-sm text-gray-500">
+        <Sparkles className="inline mr-1 text-yellow-400" />
+        Refer a friend
       </div>
     </motion.div>
   );

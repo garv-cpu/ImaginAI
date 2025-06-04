@@ -2,14 +2,60 @@ import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "motion/react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Login");
-  const { setShowLogin } = useContext(AppContext);
+  const { setShowLogin, backendURL, setToken, setUser } =
+    useContext(AppContext);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onsubmitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (state === "Login") {
+        const { data } = await axios.post(backendURL + "/api/user/login", {
+          email,
+          password,
+        });
+
+        if (data.success) {
+          setToken(data.token);
+          setUser(data.user);
+          localStorage.setItem("token", data.token);
+          setShowLogin(false);
+        } else {
+          toast.error(data.message || "Login failed. Please try again.");
+        }
+      } else {
+        const { data } = await axios.post(backendURL + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+
+        if (data.success) {
+          setToken(data.token);
+          setUser(data.user);
+          localStorage.setItem("token", data.token);
+          setShowLogin(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center">
       <motion.form
+        onSubmit={onsubmitHandler}
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.3 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -29,6 +75,8 @@ const Login = () => {
           <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
             <img src={assets.profile_icon} alt="profile" width={20} />
             <input
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               type="text"
               placeholder="Full name"
               required
@@ -40,6 +88,8 @@ const Login = () => {
         <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
           <img src={assets.email_icon} alt="email" width={20} height={30} />
           <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             type="email"
             placeholder="Email id"
             required
@@ -50,6 +100,8 @@ const Login = () => {
         <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
           <img src={assets.lock_icon} alt="password" width={16} height={24} />
           <input
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             type="password"
             placeholder="Password"
             required
