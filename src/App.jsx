@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import { AppContext } from "./context/AppContext";
+import Policies from "./components/Policies";
 
 const App = () => {
   const { showLogin } = useContext(AppContext);
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/result" element={<Result />} />
         <Route path="/buy" element={<BuyCredit />} />
       </Routes>
+      <Policies/>
       <Footer />
     </div>
   );
