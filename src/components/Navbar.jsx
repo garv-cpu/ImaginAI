@@ -25,7 +25,7 @@ const Navbar = () => {
           <Link to="/shipping-policy">Shipping Policy</Link>
           <Link to="/terms-and-conditions">Terms</Link>
           <Link to="/privacy-policy">Privacy</Link>
-          <Link to="/cancellation-refunds">Refunds</Link>
+          <Link to="/cancellation-refunds">Refunds </Link>
         </div>
       </div>
 
