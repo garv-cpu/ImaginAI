@@ -2,21 +2,34 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+
 const Navbar = () => {
   const { user, setShowLogin, logout, credit } = useContext(AppContext);
-
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between py-4">
-      <Link to="/">
-        <img
-          src="/ChatGPT Image Jun 3, 2025, 12_34_31 PM.png"
-          alt=""
-          className="w-14 sm:w-20 lg:w-30 rounded-full"
-        />
-      </Link>
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between py-4 gap-3">
+      {/* Logo and Policy Links */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+        <Link to="/">
+          <img
+            src="/ChatGPT Image Jun 3, 2025, 12_34_31 PM.png"
+            alt="Logo"
+            className="w-14 sm:w-20 lg:w-30 rounded-full"
+          />
+        </Link>
 
+        {/* Policy Links */}
+        <div className="flex flex-wrap items-center gap-3 text-sm text-white">
+          <Link to="/contact">Contact Us</Link>
+          <Link to="/shipping-policy">Shipping Policy</Link>
+          <Link to="/terms-and-conditions">Terms</Link>
+          <Link to="/privacy-policy">Privacy</Link>
+          <Link to="/cancellation-refunds">Refunds</Link>
+        </div>
+      </div>
+
+      {/* User Area */}
       <div>
         {user ? (
           <div className="flex items-center gap-2 sm:gap-3">
