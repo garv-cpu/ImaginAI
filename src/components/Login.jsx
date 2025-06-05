@@ -7,12 +7,12 @@ import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Login");
-  const { setShowLogin, backendURL, setToken, setUser } =
-    useContext(AppContext);
+  const { setShowLogin, backendURL, setToken, setUser } = useContext(AppContext);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState(""); // <-- New state for phone number
 
   const onsubmitHandler = async (e) => {
     e.preventDefault();
@@ -33,10 +33,12 @@ const Login = () => {
           toast.error(data.message || "Login failed. Please try again.");
         }
       } else {
+        // For Signup, send phone as well
         const { data } = await axios.post(backendURL + "/api/user/register", {
           name,
           email,
           password,
+          phone, // send phone here
         });
 
         if (data.success) {
@@ -44,6 +46,8 @@ const Login = () => {
           setUser(data.user);
           localStorage.setItem("token", data.token);
           setShowLogin(false);
+        } else {
+          toast.error(data.message || "Signup failed. Please try again.");
         }
       }
     } catch (error) {
@@ -72,17 +76,33 @@ const Login = () => {
         </p>
 
         {state !== "Login" && (
-          <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
-            <img src={assets.profile_icon} alt="profile" width={20} />
-            <input
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              type="text"
-              placeholder="Full name"
-              required
-              className="outline-none flex-1 text-sm"
-            />
-          </div>
+          <>
+            <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
+              <img src={assets.profile_icon} alt="profile" width={20} />
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                type="text"
+                placeholder="Full name"
+                required
+                className="outline-none flex-1 text-sm"
+              />
+            </div>
+
+            <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
+              <img src={assets.phone_icon} alt="phone" width={20} />
+              <input
+                onChange={(e) => setPhone(e.target.value)}
+                value={phone}
+                type="tel"
+                placeholder="Phone number"
+                required
+                className="outline-none flex-1 text-sm"
+                pattern="[0-9]{10}"
+                title="Enter a 10-digit phone number"
+              />
+            </div>
+          </>
         )}
 
         <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
@@ -109,9 +129,7 @@ const Login = () => {
           />
         </div>
 
-        <p className="text-sm text-gray-500 my-4 cursor-pointer">
-          Forgot password?
-        </p>
+        <p className="text-sm text-gray-500 my-4 cursor-pointer">Forgot password?</p>
 
         <button className="bg-zinc-800 text-white w-full py-2 rounded-full">
           {state === "Login" ? "Login" : "Create account"}
