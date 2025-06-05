@@ -90,7 +90,6 @@ const Login = () => {
             </div>
 
             <div className="border px-6 py-3 flex items-center gap-2 rounded-full mb-4">
-              <img src={assets.phone_icon} alt="phone" width={20} />
               <input
                 onChange={(e) => setPhone(e.target.value)}
                 value={phone}
