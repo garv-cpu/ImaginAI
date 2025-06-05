@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
+/* global Cashfree */
+
 const BuyCredit = () => {
   const { user, backendURL, loadCreditData, token, setShowLogin } =
     useContext(AppContext);
@@ -27,26 +29,29 @@ const BuyCredit = () => {
         setShowLogin(true);
         return;
       }
-
+  
       const { data } = await axios.post(
         `${backendURL}/api/user/pay-razor`,
         { planId },
         { headers: { token } }
       );
-
-      if (data.success && data.order?.payment_link) {
-        toast.info("Redirecting to payment...");
-        window.location.href = data.order.payment_link; // redirect to Cashfree
+  
+      if (data.success && data.paymentSessionId) {
+        const cashfree = Cashfree({ mode: "production" }); // Use "sandbox" for testing
+        const checkoutOptions = {
+          paymentSessionId: data.paymentSessionId,
+          redirectTarget: "_self", // Opens in the same tab
+        };
+        cashfree.checkout(checkoutOptions);
       } else {
-        toast.error(
-          data.error || "Unable to initiate payment. Please try again."
-        );
+        toast.error("Unable to initiate payment. Please try again.");
       }
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Payment failed.");
     }
   };
+  
 
   return (
     <motion.div
