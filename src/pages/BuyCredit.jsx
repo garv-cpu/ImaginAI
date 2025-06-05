@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { plans } from "../assets/assets";
 import { AppContext } from "./../context/AppContext";
-import { motion } from "framer-motion"; // corrected import
+import { motion } from "framer-motion";
 import { Sparkles, AlarmClock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -12,7 +12,6 @@ const BuyCredit = () => {
     useContext(AppContext);
   const navigate = useNavigate();
 
-  // Launch logic (4-day deal)
   const launchStartDate = new Date("2025-06-04");
   const now = new Date();
   const diffTime = Math.max(
@@ -22,44 +21,11 @@ const BuyCredit = () => {
 
   const isLaunchActive = diffTime > 0;
 
-  const initPay = async (order) => {
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: order.currency,
-      name: "Credits Payment",
-      description: "Credits Payment",
-      order_id: order.id,
-      receipt: order.receipt,
-      handler: async (response) => {
-        try {
-          const { data } = await axios.post(
-            backendURL + "/api/user/verify-razor",
-            response,
-            {
-              headers: { token },
-            }  
-          );
-          
-          if (data.success) {
-            loadCreditData();
-            navigate('/result')
-            toast.success('Credits Added');
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error(error.message || "Payment failed. Please try again.");
-        }
-      },
-    };
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  };
-
-  const paymentRazorpay = async (planId) => {
+  const paymentCashfree = async (planId) => {
     try {
       if (!user) {
         setShowLogin(true);
+        return;
       }
 
       const { data } = await axios.post(
@@ -68,11 +34,14 @@ const BuyCredit = () => {
         { headers: { token } }
       );
 
-      if (data.success) {
-        initPay(data.order);
+      if (data.success && data.order?.payment_link) {
+        window.location.href = data.order.payment_link; // redirect to Cashfree
+      } else {
+        toast.error( data.error ||"Unable to initiate payment. Please try again.");
       }
     } catch (error) {
-      toast.error(error.message || "Payment failed. Please try again.");
+      console.error(error);
+      toast.error(error.response?.data?.message || "Payment failed.");
     }
   };
 
@@ -120,7 +89,7 @@ const BuyCredit = () => {
               {item.credits} credits
             </p>
             <button
-              onClick={() => paymentRazorpay(item.id)}
+              onClick={() => paymentCashfree(item.id)}
               className="w-full bg-zinc-800 mt-8 text-sm rounded-md py-2.5 min-w-52 text-white cursor-pointer"
             >
               {user ? "Purchase" : "Get Started"}

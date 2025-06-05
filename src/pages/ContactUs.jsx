@@ -9,7 +9,7 @@ const ContactUs = () => {
       </p>
       <ul className="list-disc pl-5 mb-4">
         <li>Email: hibon.technologies@gmail.com</li>
-        <li>Response Time: Within 24–48 business hours</li>
+        <li>Response Time: Within 24-48 business hours</li>
       </ul>
     </div>
   );
