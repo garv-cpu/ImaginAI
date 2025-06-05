@@ -35,9 +35,12 @@ const BuyCredit = () => {
       );
 
       if (data.success && data.order?.payment_link) {
+        toast.info("Redirecting to payment...");
         window.location.href = data.order.payment_link; // redirect to Cashfree
       } else {
-        toast.error( data.error ||"Unable to initiate payment. Please try again.");
+        toast.error(
+          data.error || "Unable to initiate payment. Please try again."
+        );
       }
     } catch (error) {
       console.error(error);
