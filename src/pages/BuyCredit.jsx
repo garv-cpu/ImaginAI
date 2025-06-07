@@ -18,7 +18,7 @@ const BuyCredit = () => {
   const now = new Date();
   const diffTime = Math.max(
     0,
-    4 - Math.floor((now - launchStartDate) / (1000 * 60 * 60 * 24))
+    10 - Math.floor((now - launchStartDate) / (1000 * 60 * 60 * 24))
   );
 
   const isLaunchActive = diffTime > 0;

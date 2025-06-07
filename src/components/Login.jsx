@@ -156,7 +156,7 @@ const Login = () => {
           <p className="mt-5 text-center">
             Don't have an account?{" "}
             <span
-              onClick={() => setState("NAMASATE")}
+              onClick={() => setState("NAMASTE")}
               className="text-gray-800 cursor-pointer underline"
             >
               Sign up
