@@ -12,10 +12,29 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState(""); // <-- New state for phone number
+  const [phone, setPhone] = useState("");
+
+  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const isValidPhone = (phone) => /^[0-9]{10}$/.test(phone);
 
   const onsubmitHandler = async (e) => {
     e.preventDefault();
+
+    if (!isValidEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    if (state === "Sign up") {
+      if (!isValidPhone(phone)) {
+        toast.error("Phone number must be 10 digits.");
+        return;
+      }
+      if (password.length < 4) {
+        toast.error("Password must be at least 4 characters long.");
+        return;
+      }
+    }
 
     try {
       if (state === "Login") {
@@ -30,15 +49,14 @@ const Login = () => {
           localStorage.setItem("token", data.token);
           setShowLogin(false);
         } else {
-          toast.error(data.message || "Login failed. Please try again.");
+          toast.error(data.message || "Invalid email or password.");
         }
       } else {
-        // For Signup, send phone as well
         const { data } = await axios.post(backendURL + "/api/user/register", {
           name,
           email,
           password,
-          phone, // send phone here
+          phone,
         });
 
         if (data.success) {
@@ -47,12 +65,12 @@ const Login = () => {
           localStorage.setItem("token", data.token);
           setShowLogin(false);
         } else {
-          toast.error(data.message || "Signup failed. Please try again.");
+          toast.error(data.message || "Signup failed. Try a different email.");
         }
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message || "Something went wrong.");
     }
   };
 
@@ -138,7 +156,7 @@ const Login = () => {
           <p className="mt-5 text-center">
             Don't have an account?{" "}
             <span
-              onClick={() => setState("Sign up")}
+              onClick={() => setState("NAMASATE")}
               className="text-gray-800 cursor-pointer underline"
             >
               Sign up

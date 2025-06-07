@@ -31,7 +31,7 @@ const Header = () => {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="text-stone-500 inline-flex text-center gap-2 bg-white px-6 py-1 rounded-full border border-neutral-500"
       >
-        <p>Best text to image generator</p>
+        <p>Get 5 Credits just for 99</p>
         <img src={assets.star_icon} alt="" />
       </motion.div>
       <motion.h1
@@ -40,7 +40,7 @@ const Header = () => {
         transition={{ duration: 2, delay: 0.4 }}
         className="text-white text-4xl max-w-[300px] sm:text-7xl sm:max-w-[590px] mx-auto mt-10 text-center"
       >
-        Turn text to <span className="text-blue-600">image</span>, in seconds.
+        Turn text to <span className="text-blue-600">image</span>, in  seconds.
       </motion.h1>
       <motion.p
         className="text-white text-center max-w-xl mx-auto mt-5"
